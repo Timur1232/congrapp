@@ -1,0 +1,19 @@
+@model congrapp.Models.BirthdayInfo
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h3>Create item</h3>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label>Person's name</label>
+        <input type="text" class="form-control" asp-for="PersonName"/>
+    </div>
+    <div class="form-group">
+        <label>Birthday date</label>
+        <input type="date" class="form-control" asp-for="BirthdayDate"/>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

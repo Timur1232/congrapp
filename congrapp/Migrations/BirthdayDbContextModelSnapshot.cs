@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using congrapp.Database;
+using congrapp.Data;
 
 #nullable disable
 
@@ -35,7 +35,7 @@ namespace congrapp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BirthdayInfos");
+                    b.ToTable("BirthdayInfos", (string)null);
                 });
 
             modelBuilder.Entity("congrapp.Models.BirthdayNote", b =>
@@ -55,7 +55,7 @@ namespace congrapp.Migrations
 
                     b.HasIndex("BirthdayId");
 
-                    b.ToTable("BirthdayNotes");
+                    b.ToTable("BirthdayNotes", (string)null);
                 });
 
             modelBuilder.Entity("congrapp.Models.BirthdayNote", b =>

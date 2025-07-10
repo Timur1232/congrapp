@@ -6,13 +6,13 @@ namespace congrapp.Models;
 public class BirthdayNote
 {
     [Key]
-    public int Id { get; set; }
+    public int Id { get; init; }
     
     [ForeignKey("BirthdayInfo")]
-    public int BirthdayId { get; set; }
+    public int BirthdayId { get; init; }
     
     [Required]
-    public string Note { get; set; }
+    public string Note { get; init; }
     
-    public BirthdayInfo BirthdayInfo { get; set; }
+    public BirthdayInfo? BirthdayInfo { get; init; }
 }

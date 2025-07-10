@@ -1,2 +1,3 @@
 - Урок по asp.net core mvc: https://youtu.be/RWXKysImabs
 - Создание SQLite бд: https://youtu.be/S7SdtcIr28s
+- Аттрибуты бд: https://learn.microsoft.com/en-us/ef/core/modeling/entity-properties?tabs=data-annotations%2Cwith-nrt

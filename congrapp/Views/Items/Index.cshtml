@@ -1,0 +1,29 @@
+@model List<congrapp.Models.BirthdayInfo>
+
+@{
+    ViewData["Title"] = "Birthdays";
+}
+
+<h3>Birthdays</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Birthday date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.PersonName</td>
+                <td>@item.BirthdayDate</td>
+                @* <td> *@
+                @*     <a asp-action="Edit" asp-route="@item.Id">Edit</a> *@
+                @*     <a asp-action="Delete" asp-route="@item.Id">Delete</a> *@
+                @* </td> *@
+            </tr>
+        }
+    </tbody>
+</table>

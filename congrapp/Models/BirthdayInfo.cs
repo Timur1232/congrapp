@@ -6,14 +6,14 @@ namespace congrapp.Models;
 public class BirthdayInfo
 {
     [Key]
-    public int Id { get; set; }
+    public int Id { get; init; }
     
     [Required, DisplayName("Person\'s name")]
-    public string PersonName { get; set; }
+    public string PersonName { get; init; }
     
     [Required, DisplayName("Date of birth")]
-    public DateTime BirthdayDate { get; set; }
+    public DateTime BirthdayDate { get; init; }
     
-    public string? ImagePath { get; set; }
-    public List<BirthdayNote> Notes { get; set; } 
+    public string? ImagePath { get; init; }
+    public List<BirthdayNote>? Notes { get; init; } 
 }
