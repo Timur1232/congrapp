@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Congrapp.Server.Migrations
+namespace Congrapp.Server.Migrations.BirthdayDb
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialBirthday : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,8 @@ namespace Congrapp.Server.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    BirthdayDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    BirthdayDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     PersonName = table.Column<string>(type: "TEXT", nullable: false),
                     ImagePath = table.Column<string>(type: "TEXT", nullable: true)
                 },

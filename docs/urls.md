@@ -1,0 +1,7 @@
+- Урок по asp.net core mvc: https://youtu.be/RWXKysImabs
+- Создание SQLite бд: https://youtu.be/S7SdtcIr28s
+- Аттрибуты бд: https://learn.microsoft.com/en-us/ef/core/modeling/entity-properties?tabs=data-annotations%2Cwith-nrt
+- asp.net core web api + react: https://youtu.be/L7Y6g6x6ZuQ
+- asp.net core web api: https://youtu.be/RWXKysImabs
+- jwt: https://youtu.be/6DWJIyipxzw 
+- password hasher: https://www.youtube.com/watch?v=J4ix8Mhi3rs

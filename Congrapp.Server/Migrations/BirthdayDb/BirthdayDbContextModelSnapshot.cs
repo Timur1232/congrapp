@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Congrapp.Server.Migrations
+namespace Congrapp.Server.Migrations.BirthdayDb
 {
     [DbContext(typeof(BirthdayDbContext))]
     partial class BirthdayDbContextModelSnapshot : ModelSnapshot
@@ -32,6 +32,9 @@ namespace Congrapp.Server.Migrations
                     b.Property<string>("PersonName")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

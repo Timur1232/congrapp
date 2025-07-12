@@ -16,7 +16,7 @@ public class PasswordHasher
     {
         byte[] salt = RandomNumberGenerator.GetBytes(SaltSize);
         byte[] hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, Iterations, Algorithm, HashSize);
-        return $"{Convert.ToHexString(hash)}-{Convert.ToHexString(salt)}";
+        return $"{Convert.ToBase64String(hash)}-{Convert.ToBase64String(salt)}";
     }
 
     public bool Varify(string password, string passwordHash)

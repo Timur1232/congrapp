@@ -17,6 +17,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Migrations\BirthdayDb\" />
+      <Folder Include="Migrations\UserDb\" />
       <Folder Include="wwwroot\upload\images\" />
     </ItemGroup>
 

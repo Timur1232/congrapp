@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Congrapp.Server.Migrations
+namespace Congrapp.Server.Migrations.BirthdayDb
 {
     [DbContext(typeof(BirthdayDbContext))]
-    [Migration("20250712162141_DateTypeChange")]
-    partial class DateTypeChange
+    [Migration("20250712201252_InitialBirthday")]
+    partial class InitialBirthday
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,6 +35,9 @@ namespace Congrapp.Server.Migrations
                     b.Property<string>("PersonName")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

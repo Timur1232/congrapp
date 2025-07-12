@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.JsonWebTokens;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
@@ -27,8 +27,7 @@ public class JwtTokenProvider(IConfiguration configuration)
             Audience = configuration["Jwt:Audience"]
         };
 
-        var handler = new JwtSecurityTokenHandler();
-        var token = handler.CreateToken(tokenDescriptor);
-        return handler.WriteToken(token);
+        var handler = new JsonWebTokenHandler();
+        return handler.CreateToken(tokenDescriptor);
     }
 }
