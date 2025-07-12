@@ -1,0 +1,30 @@
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Identity;
+
+namespace Congrapp.Server.Users;
+
+public class PasswordHasher
+{
+    private const int SaltSize = 16;
+    private const int HashSize = 32;
+    private const int Iterations = 100000;
+    
+    private readonly HashAlgorithmName Algorithm = HashAlgorithmName.SHA256;
+    
+    public string Hash(string password)
+    {
+        byte[] salt = RandomNumberGenerator.GetBytes(SaltSize);
+        byte[] hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, Iterations, Algorithm, HashSize);
+        return $"{Convert.ToHexString(hash)}-{Convert.ToHexString(salt)}";
+    }
+
+    public bool Varify(string password, string passwordHash)
+    {
+        string[] pair = passwordHash.Split('-');
+        byte[] hash = Convert.FromBase64String(pair[0]);
+        byte[] salt = Convert.FromBase64String(pair[1]);
+        byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(password, salt, Iterations, Algorithm, HashSize);
+        return CryptographicOperations.FixedTimeEquals(hash, inputHash);
+    }
+}
