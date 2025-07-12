@@ -19,7 +19,8 @@ public class JwtTokenProvider(IConfiguration configuration)
             Subject = new ClaimsIdentity([
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("email_varified", user.EmailVarified.ToString())
+                new Claim("emailVarified", user.EmailVarified.ToString()),
+                new Claim("userId", user.Id.ToString())
             ]),
             Expires = DateTime.UtcNow.AddMinutes(configuration.GetValue<int>("Jwt:ExpirationMinutes")),
             SigningCredentials = credentials,

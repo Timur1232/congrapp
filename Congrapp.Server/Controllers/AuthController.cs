@@ -1,5 +1,6 @@
 using Congrapp.Server.Data;
 using Congrapp.Server.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,7 @@ namespace Congrapp.Server.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly UserDbContext _userDbContext;
-    private readonly PasswordHasher _passwordHasher = new PasswordHasher();
+    private readonly PasswordHasher _passwordHasher; 
     private readonly JwtTokenProvider _jwtTokenProvider;
     
     public record LoginRequest(string Email, string Password);
@@ -20,6 +21,7 @@ public class AuthController : ControllerBase
     {
         _userDbContext = userDbContext;
         _jwtTokenProvider = new JwtTokenProvider(config);
+        _passwordHasher = new PasswordHasher();
     }
 
     [HttpPost("login")]

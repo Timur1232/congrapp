@@ -1,5 +1,7 @@
+using System.IdentityModel.Tokens.Jwt;
 using Congrapp.Server.Data;
 using Congrapp.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +9,7 @@ namespace Congrapp.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ItemsController : ControllerBase
 {
     private readonly BirthdayDbContext _birthdayDbContext;
@@ -21,8 +24,21 @@ public class ItemsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var items = await _birthdayDbContext.BirthdayInfos.ToListAsync();
-        return Ok(items);
+        var idClaim = User.FindFirst("userId");
+        if (idClaim == null || idClaim.Value == "")
+        {
+            return Unauthorized();
+        }
+        
+        int userId = int.Parse(idClaim.Value);
+        var user = await _userDbContext.Users.FindAsync(userId);
+        if (user == null)
+        {
+            return NotFound();
+        }
+        
+        var items = await _birthdayDbContext.BirthdayInfos.Where(x => x.UserId == user.Id).ToListAsync();
+        return Ok(items); 
     }
 
     [HttpGet("{id}")]
