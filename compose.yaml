@@ -1,0 +1,9 @@
+﻿services:
+  congrapp.server:
+    image: congrapp.server
+    build:
+      context: .
+      dockerfile: Congrapp.Server/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
