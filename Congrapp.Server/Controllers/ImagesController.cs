@@ -9,36 +9,28 @@ namespace Congrapp.Server.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class ImagesController : ControllerBase
+public class ImagesController(BirthdayDbContext birthdayDbContext, IConfiguration config, IImageService imageService)
+    : ControllerBase
 {
-    private readonly BirthdayDbContext _birthdayDbContext;
-    private readonly IConfiguration _config;
-    private readonly IImageService _imageService;
-
-    public ImagesController(BirthdayDbContext birthdayDbContext, IConfiguration config, IImageService imageService)
-    {
-        _birthdayDbContext = birthdayDbContext;
-        _config = config;
-        _imageService = imageService;
-    }
+    private readonly IConfiguration _config = config;
 
     [HttpPost("{birthdayId}")]
     public async Task<IActionResult> Upload([FromRoute] int birthdayId, IFormFile file)
     {
-        var user = await _birthdayDbContext.GetUserByClaims(User);
+        var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
         {
             return NotFound("User not found.");
         }
 
-        var item = await _birthdayDbContext.BirthdayInfos
+        var item = await birthdayDbContext.BirthdayInfos
             .FirstOrDefaultAsync(x => x.Id == birthdayId && x.UserId == user.Id);
         if (item == null)
         {
             return NotFound("Item not found.");
         }
 
-        var res = _imageService.Save(file);
+        var res = imageService.Save(file);
         if (!res.IsValid)
         {
             return BadRequest(res.Error);
@@ -46,8 +38,8 @@ public class ImagesController : ControllerBase
         
         var filePath = res.Value;
         item.ImagePath = filePath;
-        _birthdayDbContext.BirthdayInfos.Update(item);
-        await _birthdayDbContext.SaveChangesAsync();
+        birthdayDbContext.BirthdayInfos.Update(item);
+        await birthdayDbContext.SaveChangesAsync();
 
         return Ok(item);
     }
@@ -55,13 +47,13 @@ public class ImagesController : ControllerBase
     [HttpDelete("{birthdayId}")]
     public async Task<IActionResult> Delete([FromRoute] int birthdayId)
     {
-        var user = await _birthdayDbContext.GetUserByClaims(User);
+        var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
         {
             return NotFound("User not found.");
         }
 
-        var item = await _birthdayDbContext.BirthdayInfos
+        var item = await birthdayDbContext.BirthdayInfos
             .FirstOrDefaultAsync(x => x.Id == birthdayId && x.UserId == user.Id);
         if (item == null)
         {
@@ -72,10 +64,10 @@ public class ImagesController : ControllerBase
             return NoContent();
         }
         
-        var res = _imageService.Delete(item.ImagePath);
+        var res = imageService.Delete(item.ImagePath);
         item.ImagePath = null;
-        _birthdayDbContext.BirthdayInfos.Update(item);
-        await _birthdayDbContext.SaveChangesAsync();
+        birthdayDbContext.BirthdayInfos.Update(item);
+        await birthdayDbContext.SaveChangesAsync();
         
         if (!res.IsValid)
         {
@@ -87,13 +79,13 @@ public class ImagesController : ControllerBase
     [HttpGet("{birthdayId}")]
     public async Task<IActionResult> Get([FromRoute] int birthdayId)
     {
-        var user = await _birthdayDbContext.GetUserByClaims(User);
+        var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
         {
             return NotFound("User not found.");
         }
 
-        var item = await _birthdayDbContext.BirthdayInfos
+        var item = await birthdayDbContext.BirthdayInfos
             .FirstOrDefaultAsync(x => x.Id == birthdayId && x.UserId == user.Id);
         if (item == null)
         {
@@ -104,12 +96,12 @@ public class ImagesController : ControllerBase
             return NoContent();
         }
 
-        var res = _imageService.Load(item.ImagePath);
+        var res = imageService.Load(item.ImagePath);
         if (!res.IsValid)
         {
             item.ImagePath = null;
-            _birthdayDbContext.BirthdayInfos.Update(item);
-            await _birthdayDbContext.SaveChangesAsync();
+            birthdayDbContext.BirthdayInfos.Update(item);
+            await birthdayDbContext.SaveChangesAsync();
             return StatusCode(500, res.Error);
         }
 

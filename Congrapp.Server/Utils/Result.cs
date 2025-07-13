@@ -1,18 +1,11 @@
 namespace Congrapp.Server.Utils;
 
-public class Result<T, E> 
+public class Result<T, E>(T value, E error, bool isValid)
 {
-    public Result(T value, E error, bool isValid)
-    {
-        Value = value;
-        Error = error;
-        IsValid = isValid;
-    }
+    public T Value { get; } = value;
+    public E Error { get; } = error;
+    public bool IsValid { get; } = isValid;
 
-    public T Value { get; }
-    public E Error { get; }
-    public bool IsValid { get; }
-    
     public static Result<T, E> Ok(T value)
     {
         return new Result<T, E>(value, default!, true);

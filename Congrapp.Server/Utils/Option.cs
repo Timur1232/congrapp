@@ -1,15 +1,9 @@
 namespace Congrapp.Server.Utils;
 
-public class Option<T>
+public class Option<T>(T value, bool isValid)
 {
-    public Option(T value, bool isValid)
-    {
-        Value = value;
-        IsValid = isValid;
-    }
-
-    public T Value { get; }
-    public bool IsValid { get; }
+    public T Value { get; } = value;
+    public bool IsValid { get; } = isValid;
 
     public static Option<T> Some(T value)
     {

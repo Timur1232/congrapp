@@ -9,15 +9,8 @@ public interface IImageService
     public Result<string, string> Delete(string filePath);
 }
 
-public class ImageService : IImageService
+public class ImageService(IConfiguration config) : IImageService
 {
-    private readonly IConfiguration _config;
-
-    public ImageService(IConfiguration config)
-    {
-        _config = config;
-    }
-
     public Result<string, string> Save(IFormFile file)
     {
         var extension = Path.GetExtension(file.FileName);
@@ -26,7 +19,7 @@ public class ImageService : IImageService
             return Result<string, string>.Err("Only jpg or jpeg files are supported.");
         }
         var fileName = Guid.NewGuid() + extension;
-        var filePath = Path.Combine(_config["ImagesUploadDir"]!, fileName);
+        var filePath = Path.Combine(config["ImagesUploadDir"]!, fileName);
 
         var stream = new FileStream(filePath, FileMode.Create);
         file.CopyToAsync(stream);
