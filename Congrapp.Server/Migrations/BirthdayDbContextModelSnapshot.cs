@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Congrapp.Server.Migrations.BirthdayDb
+namespace Congrapp.Server.Migrations
 {
     [DbContext(typeof(BirthdayDbContext))]
     partial class BirthdayDbContextModelSnapshot : ModelSnapshot
@@ -27,10 +27,16 @@ namespace Congrapp.Server.Migrations.BirthdayDb
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ImagePath")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("PersonName")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
@@ -41,22 +47,26 @@ namespace Congrapp.Server.Migrations.BirthdayDb
                     b.ToTable("BirthdayInfos");
                 });
 
-            modelBuilder.Entity("Congrapp.Server.Models.BirthdayNote", b =>
+            modelBuilder.Entity("Congrapp.Server.Users.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("BirthdayId")
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("EmailVarified")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Note")
+                    b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("BirthdayNotes");
+                    b.ToTable("Users");
                 });
 #pragma warning restore 612, 618
         }

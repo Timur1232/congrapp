@@ -1,6 +1,5 @@
 using Congrapp.Server.Data;
 using Congrapp.Server.Users;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,16 +9,16 @@ namespace Congrapp.Server.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly UserDbContext _userDbContext;
+    private readonly BirthdayDbContext _birthdayDbContext;
     private readonly PasswordHasher _passwordHasher; 
     private readonly JwtTokenProvider _jwtTokenProvider;
     
     public record LoginRequest(string Email, string Password);
-    public record RegisterRequest(string Email, string Password);
+    public record RegisterRequest(string Email, string Password, string PasswordConfirmation);
 
-    public AuthController(IConfiguration config, UserDbContext userDbContext)
+    public AuthController(IConfiguration config, BirthdayDbContext birthdayDbContext)
     {
-        _userDbContext = userDbContext;
+        _birthdayDbContext = birthdayDbContext;
         _jwtTokenProvider = new JwtTokenProvider(config);
         _passwordHasher = new PasswordHasher();
     }
@@ -27,7 +26,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        var user = await _userDbContext.Users.SingleOrDefaultAsync(x => x.Email == request.Email);
+        var user = await _birthdayDbContext.Users.SingleOrDefaultAsync(x => x.Email == request.Email);
         if (user == null)
         {
             return Unauthorized("User not found.");
@@ -45,7 +44,12 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
-        var existingUser = await _userDbContext.Users.SingleOrDefaultAsync(x => x.Email == request.Email);
+        if (request.Password != request.PasswordConfirmation)
+        {
+            return Unauthorized("Passwords do not match.");
+        }
+        
+        var existingUser = await _birthdayDbContext.Users.SingleOrDefaultAsync(x => x.Email == request.Email);
         if (existingUser != null)
         {
             return Unauthorized("User already exists.");
@@ -55,11 +59,11 @@ public class AuthController : ControllerBase
         var user = new User
         {
             Email = request.Email,
-            PasswordHash = passwordHash,
+            PasswordHash = passwordHash
         };
         
-        _userDbContext.Users.Add(user);
-        await _userDbContext.SaveChangesAsync();
+        _birthdayDbContext.Users.Add(user);
+        await _birthdayDbContext.SaveChangesAsync();
         
         return CreatedAtAction(nameof(Login), new LoginRequest(request.Email, request.Password), user);
     }

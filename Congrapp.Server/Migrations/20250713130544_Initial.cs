@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Congrapp.Server.Migrations.BirthdayDb
+namespace Congrapp.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialBirthday : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,9 +18,10 @@ namespace Congrapp.Server.Migrations.BirthdayDb
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    PersonName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
                     BirthdayDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    PersonName = table.Column<string>(type: "TEXT", nullable: false),
-                    ImagePath = table.Column<string>(type: "TEXT", nullable: true)
+                    Note = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
+                    ImagePath = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -28,17 +29,18 @@ namespace Congrapp.Server.Migrations.BirthdayDb
                 });
 
             migrationBuilder.CreateTable(
-                name: "BirthdayNotes",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Note = table.Column<string>(type: "TEXT", nullable: false),
-                    BirthdayId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Email = table.Column<string>(type: "TEXT", nullable: false),
+                    PasswordHash = table.Column<string>(type: "TEXT", nullable: false),
+                    EmailVarified = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BirthdayNotes", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
         }
 
@@ -49,7 +51,7 @@ namespace Congrapp.Server.Migrations.BirthdayDb
                 name: "BirthdayInfos");
 
             migrationBuilder.DropTable(
-                name: "BirthdayNotes");
+                name: "Users");
         }
     }
 }

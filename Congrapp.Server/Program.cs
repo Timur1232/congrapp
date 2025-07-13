@@ -11,8 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<BirthdayDbContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("BirthdayConnection")));
-builder.Services.AddDbContext<UserDbContext>(options => 
-    options.UseSqlite(builder.Configuration.GetConnectionString("UsersConnection")));
 
 builder.Services.AddAuthorizationBuilder()
     .SetDefaultPolicy(new AuthorizationPolicyBuilder()
@@ -32,6 +30,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateIssuer = true,
             ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
             ClockSkew = TimeSpan.Zero
         };
     });

@@ -1,6 +1,4 @@
 using System.Security.Cryptography;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Identity;
 
 namespace Congrapp.Server.Users;
 
