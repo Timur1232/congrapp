@@ -1,5 +1,7 @@
 using System.Text;
 using Congrapp.Server.Data;
+using Congrapp.Server.Services;
+using Congrapp.Server.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<BirthdayDbContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("BirthdayConnection")));
+
+builder.Services.AddScoped<IJwtTokenProvider, JwtTokenProvider>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IImageService, ImageService>();
 
 builder.Services.AddAuthorizationBuilder()
     .SetDefaultPolicy(new AuthorizationPolicyBuilder()

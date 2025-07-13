@@ -1,4 +1,5 @@
 using Congrapp.Server.Data;
+using Congrapp.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +13,13 @@ public class ImagesController : ControllerBase
 {
     private readonly BirthdayDbContext _birthdayDbContext;
     private readonly IConfiguration _config;
+    private readonly IImageService _imageService;
 
-    public ImagesController(BirthdayDbContext birthdayDbContext, IConfiguration config)
+    public ImagesController(BirthdayDbContext birthdayDbContext, IConfiguration config, IImageService imageService)
     {
         _birthdayDbContext = birthdayDbContext;
         _config = config;
+        _imageService = imageService;
     }
 
     [HttpPost("{birthdayId}")]
@@ -34,18 +37,14 @@ public class ImagesController : ControllerBase
         {
             return NotFound("Item not found.");
         }
-        
-        var extension = Path.GetExtension(file.FileName);
-        if (extension != ".jpg" && extension != ".jpeg")
-        {
-            return BadRequest("Only jpg or jpeg files are supported.");
-        }
-        var fileName = Guid.NewGuid() + extension;
-        var filePath = Path.Combine(_config["ImagesUploadDir"]!, fileName);
 
-        var stream = new FileStream(filePath, FileMode.Create);
-        await file.CopyToAsync(stream);
+        var res = _imageService.Save(file);
+        if (!res.IsValid)
+        {
+            return BadRequest(res.Error);
+        }
         
+        var filePath = res.Value;
         item.ImagePath = filePath;
         _birthdayDbContext.BirthdayInfos.Update(item);
         await _birthdayDbContext.SaveChangesAsync();
@@ -73,18 +72,15 @@ public class ImagesController : ControllerBase
             return NoContent();
         }
         
-        var filePath = Path.Combine(item.ImagePath);
+        var res = _imageService.Delete(item.ImagePath);
         item.ImagePath = null;
         _birthdayDbContext.BirthdayInfos.Update(item);
         await _birthdayDbContext.SaveChangesAsync();
         
-        if (!System.IO.File.Exists(filePath))
+        if (!res.IsValid)
         {
-            return NotFound("File does not exist.");
+            return StatusCode(500, res.Error);
         }
-        
-        System.IO.File.Delete(filePath);
-
         return Ok(item);
     }
 
@@ -108,16 +104,16 @@ public class ImagesController : ControllerBase
             return NoContent();
         }
 
-        var filePath = Path.Combine(item.ImagePath);
-        if (!System.IO.File.Exists(filePath))
+        var res = _imageService.Load(item.ImagePath);
+        if (!res.IsValid)
         {
             item.ImagePath = null;
             _birthdayDbContext.BirthdayInfos.Update(item);
             await _birthdayDbContext.SaveChangesAsync();
-            return NotFound("File does not exist.");
+            return StatusCode(500, res.Error);
         }
 
-        var imageStream = System.IO.File.OpenRead(filePath);
+        var imageStream = res.Value;
         return File(imageStream, "image/jpeg");
     }
 }

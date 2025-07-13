@@ -5,7 +5,12 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Congrapp.Server.Users;
 
-public class JwtTokenProvider(IConfiguration configuration)
+public interface IJwtTokenProvider
+{
+    public string GenerateJwtToken(User user);
+}
+
+public class JwtTokenProvider(IConfiguration configuration) : IJwtTokenProvider
 {
     public string GenerateJwtToken(User user)
     {

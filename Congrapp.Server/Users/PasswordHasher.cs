@@ -2,7 +2,13 @@ using System.Security.Cryptography;
 
 namespace Congrapp.Server.Users;
 
-public class PasswordHasher
+public interface IPasswordHasher
+{
+    public string Hash(string password);
+    public bool Varify(string password, string passwordHash);
+}
+
+public class PasswordHasher : IPasswordHasher
 {
     private const int SaltSize = 16;
     private const int HashSize = 32;

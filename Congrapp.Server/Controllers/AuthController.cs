@@ -10,17 +10,17 @@ namespace Congrapp.Server.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly BirthdayDbContext _birthdayDbContext;
-    private readonly PasswordHasher _passwordHasher; 
-    private readonly JwtTokenProvider _jwtTokenProvider;
+    private readonly IPasswordHasher _passwordHasher; 
+    private readonly IJwtTokenProvider _jwtTokenProvider;
     
     public record LoginRequest(string Email, string Password);
     public record RegisterRequest(string Email, string Password, string PasswordConfirmation);
 
-    public AuthController(IConfiguration config, BirthdayDbContext birthdayDbContext)
+    public AuthController(IConfiguration config, BirthdayDbContext birthdayDbContext, IPasswordHasher passwordHasher, IJwtTokenProvider jwtTokenProvider)
     {
         _birthdayDbContext = birthdayDbContext;
-        _jwtTokenProvider = new JwtTokenProvider(config);
-        _passwordHasher = new PasswordHasher();
+        _passwordHasher = passwordHasher;
+        _jwtTokenProvider = jwtTokenProvider;
     }
 
     [HttpPost("login")]
