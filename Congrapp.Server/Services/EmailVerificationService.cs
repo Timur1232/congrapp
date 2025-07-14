@@ -11,8 +11,8 @@ public class EmailVerificationService(IConfiguration config, IFluentEmail fluent
         var verificationId = Guid.NewGuid();
         await fluentEmail
             .To(user.Email)
-            .Subject("Email verification for Congrapp")
-            .Body($"To verify your email address <a href=\"{config["ApplicationUrl"]}api/auth/verify?token={verificationId.ToString()}\">click here</a>.", isHtml: true)
+            .Subject("Подтвердите электронную почту [Congrapp]")
+            .Body($"<h3>Для подтверждения почты <a href=\"{config["ApplicationUrl"]}api/auth/verify?token={verificationId.ToString()}\">нажмите здесь</a>.</h3>", isHtml: true)
             .SendAsync();
 
         var emailVerification = new EmailVerification

@@ -11,7 +11,7 @@ namespace Congrapp.Server.Controllers;
 [Authorize]
 public class ItemsController(BirthdayDbContext birthdayDbContext) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("all")]
     public async Task<IActionResult> GetAll()
     {
         var user = await birthdayDbContext.GetUserByClaims(User);
@@ -26,10 +26,10 @@ public class ItemsController(BirthdayDbContext birthdayDbContext) : ControllerBa
         return Ok(items); 
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    [HttpGet]
+    public async Task<IActionResult> GetById([FromQuery] int birthdayId)
     {
-        if (id <= 0)
+        if (birthdayId <= 0)
         {
             return BadRequest("Id must be higher than zero.");
         }
@@ -41,7 +41,7 @@ public class ItemsController(BirthdayDbContext birthdayDbContext) : ControllerBa
         }
         
         var item = await birthdayDbContext.BirthdayInfos
-            .FirstOrDefaultAsync(x => x.Id == id && x.UserId == user.Id);
+            .FirstOrDefaultAsync(x => x.Id == birthdayId && x.UserId == user.Id);
         if (item == null)
         {
             return NotFound("Item not found.");
@@ -69,11 +69,11 @@ public class ItemsController(BirthdayDbContext birthdayDbContext) : ControllerBa
         
         birthdayDbContext.BirthdayInfos.Add(item);
         await birthdayDbContext.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetById), new { id = item.Id }, item);
+        return CreatedAtAction(nameof(GetById), new { birthdayId = item.Id }, item);
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] BirthdayInfo.BirthdayInfoDto itemDto)
+    [HttpPut]
+    public async Task<IActionResult> Update([FromQuery] int birthdayId, [FromBody] BirthdayInfo.BirthdayInfoDto itemDto)
     {
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
@@ -81,22 +81,21 @@ public class ItemsController(BirthdayDbContext birthdayDbContext) : ControllerBa
             return NotFound("User not found.");
         }
 
-        var item = new BirthdayInfo()
+        var item = await birthdayDbContext.BirthdayInfos.FirstOrDefaultAsync(x => x.Id == birthdayId);
+        if (item == null)
         {
-            Id = id,
-            UserId = user.Id,
-            BirthdayDate = itemDto.BirthdayDate,
-            PersonName = itemDto.PersonName,
-            Note = itemDto.Note
-        };
+            return NotFound("Item not found.");
+        }
+
+        item.Update(itemDto);
         
         birthdayDbContext.BirthdayInfos.Update(item);
         await birthdayDbContext.SaveChangesAsync();
         return Ok(item);
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete]
+    public async Task<IActionResult> Delete([FromQuery] int birthdayId)
     {
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
@@ -104,7 +103,7 @@ public class ItemsController(BirthdayDbContext birthdayDbContext) : ControllerBa
             return NotFound("User not found.");
         }
         
-        var item = await birthdayDbContext.BirthdayInfos.FirstOrDefaultAsync(x => x.Id == id);
+        var item = await birthdayDbContext.BirthdayInfos.FirstOrDefaultAsync(x => x.Id == birthdayId);
         if (item == null)
         {
             return NotFound("Item not found.");
@@ -112,6 +111,9 @@ public class ItemsController(BirthdayDbContext birthdayDbContext) : ControllerBa
         
         birthdayDbContext.BirthdayInfos.Remove(item);
         await birthdayDbContext.SaveChangesAsync();
+        await birthdayDbContext.NotificationRecords
+            .Where(x => x.BirthdayId == birthdayId)
+            .ExecuteDeleteAsync();
         return Ok(item);
     }
 }

@@ -14,8 +14,8 @@ public class ImagesController(BirthdayDbContext birthdayDbContext, IConfiguratio
 {
     private readonly IConfiguration _config = config;
 
-    [HttpPost("{birthdayId}")]
-    public async Task<IActionResult> Upload([FromRoute] int birthdayId, IFormFile file)
+    [HttpPost]
+    public async Task<IActionResult> Upload([FromQuery] int birthdayId, [FromForm] IFormFile file)
     {
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
@@ -30,6 +30,14 @@ public class ImagesController(BirthdayDbContext birthdayDbContext, IConfiguratio
             return NotFound("Item not found.");
         }
 
+        if (item.ImagePath != null)
+        {
+            _ = imageService.Delete(item.ImagePath);
+            item.ImagePath = null;
+            birthdayDbContext.BirthdayInfos.Update(item);
+            await birthdayDbContext.SaveChangesAsync();
+        }
+        
         var res = imageService.Save(file);
         if (!res.IsValid)
         {
@@ -44,8 +52,8 @@ public class ImagesController(BirthdayDbContext birthdayDbContext, IConfiguratio
         return Ok(item);
     }
 
-    [HttpDelete("{birthdayId}")]
-    public async Task<IActionResult> Delete([FromRoute] int birthdayId)
+    [HttpDelete]
+    public async Task<IActionResult> Delete([FromQuery] int birthdayId)
     {
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
@@ -76,8 +84,8 @@ public class ImagesController(BirthdayDbContext birthdayDbContext, IConfiguratio
         return Ok(item);
     }
 
-    [HttpGet("{birthdayId}")]
-    public async Task<IActionResult> Get([FromRoute] int birthdayId)
+    [HttpGet]
+    public async Task<IActionResult> Get([FromQuery] int birthdayId)
     {
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)

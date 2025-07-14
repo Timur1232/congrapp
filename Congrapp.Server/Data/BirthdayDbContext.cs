@@ -9,6 +9,7 @@ public class BirthdayDbContext(DbContextOptions<BirthdayDbContext> options) : Db
     public DbSet<BirthdayInfo> BirthdayInfos { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<EmailVerification> EmailVerifications { get; set; }
+    public DbSet<NotificationRecord> NotificationRecords { get; set; }
 
     public async Task<User?> GetUserByClaims(ClaimsPrincipal userClaims)
     {

@@ -13,10 +13,15 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<BirthdayDbContext>(options => 
     options.UseSqlite(builder.Configuration.GetConnectionString("BirthdayConnection")));
 
+builder.Services
+    .AddFluentEmail(builder.Configuration["Email:SenderEmail"], builder.Configuration["Email:SenderName"])
+    .AddSmtpSender(builder.Configuration["Email:Host"], builder.Configuration.GetValue<int>("Email:Port"));
+
 builder.Services.AddScoped<IJwtTokenProvider, JwtTokenProvider>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<ImageManager>();
 builder.Services.AddScoped<EmailVerificationService>();
+builder.Services.AddHostedService<NotificationService>();
 
 builder.Services.AddAuthorizationBuilder()
     .SetDefaultPolicy(new AuthorizationPolicyBuilder()
@@ -41,9 +46,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services
-    .AddFluentEmail(builder.Configuration["Email:SenderEmail"], builder.Configuration["Email:SenderName"])
-    .AddSmtpSender(builder.Configuration["Email:Host"], builder.Configuration.GetValue<int>("Email:Port"));
+
 
 var app = builder.Build();
 
