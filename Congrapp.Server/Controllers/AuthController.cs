@@ -1,5 +1,8 @@
 using Congrapp.Server.Data;
-using Congrapp.Server.Users;
+using Congrapp.Server.Models;
+using Congrapp.Server.Services;
+using FluentEmail.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +13,8 @@ namespace Congrapp.Server.Controllers;
 public class AuthController(
     BirthdayDbContext birthdayDbContext,
     IPasswordHasher passwordHasher,
-    IJwtTokenProvider jwtTokenProvider)
+    IJwtTokenProvider jwtTokenProvider,
+    EmailVerificationService emailVerificationService)
     : ControllerBase
 {
     public record LoginRequest(string Email, string Password);
@@ -48,7 +52,7 @@ public class AuthController(
             return Unauthorized("User already exists.");
         }
         
-        string passwordHash = passwordHasher.Hash(request.Password);
+        var passwordHash = passwordHasher.Hash(request.Password);
         var user = new User
         {
             Email = request.Email,
@@ -57,8 +61,37 @@ public class AuthController(
         
         birthdayDbContext.Users.Add(user);
         await birthdayDbContext.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(Login), new LoginRequest(request.Email, request.Password), user);
+
+        var emailVerification = await emailVerificationService.SendVerificationEmailAsync(user);
+        birthdayDbContext.EmailVerifications.Add(emailVerification);
+        await birthdayDbContext.SaveChangesAsync();
+
+        return Ok(user);
     }
-    // public void Varify() {}
+
+    [HttpGet("verify")]
+    public async Task<IActionResult> Verify([FromQuery] string token)
+    {
+        var inputToken = Guid.Parse(token);
+        
+        var emailVerification = await birthdayDbContext.EmailVerifications
+            .SingleOrDefaultAsync(x => x.Id == inputToken);
+        if (emailVerification == null)
+        {
+            return BadRequest("Invalid token.");
+        }
+        
+        var user = await birthdayDbContext.Users.FirstOrDefaultAsync(x => x.Id == emailVerification.UserId);
+        birthdayDbContext.EmailVerifications.Remove(emailVerification);
+        if (user == null)
+        {
+            return NotFound("User not found.");
+        }
+        
+        user.EmailVerified = true;
+        birthdayDbContext.Users.Update(user);
+        await birthdayDbContext.SaveChangesAsync();
+        
+        return Ok(user);
+    }
 }

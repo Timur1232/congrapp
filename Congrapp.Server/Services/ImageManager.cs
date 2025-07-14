@@ -2,14 +2,7 @@ using Congrapp.Server.Utils;
 
 namespace Congrapp.Server.Services;
 
-public interface IImageService
-{
-    public Result<string, string> Save(IFormFile file);
-    public Result<FileStream, string> Load(string filePath);
-    public Result<string, string> Delete(string filePath);
-}
-
-public class ImageService(IConfiguration config) : IImageService
+public class ImageManager(IConfiguration config) 
 {
     public Result<string, string> Save(IFormFile file)
     {

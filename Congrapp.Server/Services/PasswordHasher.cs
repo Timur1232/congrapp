@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace Congrapp.Server.Users;
+namespace Congrapp.Server.Services;
 
 public interface IPasswordHasher
 {

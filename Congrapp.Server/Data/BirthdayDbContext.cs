@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using Congrapp.Server.Models;
-using Congrapp.Server.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Congrapp.Server.Data;
@@ -9,6 +8,7 @@ public class BirthdayDbContext(DbContextOptions<BirthdayDbContext> options) : Db
 {
     public DbSet<BirthdayInfo> BirthdayInfos { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<EmailVerification> EmailVerifications { get; set; }
 
     public async Task<User?> GetUserByClaims(ClaimsPrincipal userClaims)
     {

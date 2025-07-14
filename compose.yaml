@@ -7,3 +7,10 @@
     ports:
       - "8080:8080"
       - "8081:8081"
+  
+  congrapp.papercut:
+    image: changemakerstudiosus/papercut-smtp:latest
+    container_name: congrapp.papercut
+    ports:
+      - "8082:80"
+      - "25:25"

@@ -1,7 +1,6 @@
 using System.Text;
 using Congrapp.Server.Data;
 using Congrapp.Server.Services;
-using Congrapp.Server.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +15,8 @@ builder.Services.AddDbContext<BirthdayDbContext>(options =>
 
 builder.Services.AddScoped<IJwtTokenProvider, JwtTokenProvider>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<ImageManager>();
+builder.Services.AddScoped<EmailVerificationService>();
 
 builder.Services.AddAuthorizationBuilder()
     .SetDefaultPolicy(new AuthorizationPolicyBuilder()
@@ -40,6 +40,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ClockSkew = TimeSpan.Zero
         };
     });
+
+builder.Services
+    .AddFluentEmail(builder.Configuration["Email:SenderEmail"], builder.Configuration["Email:SenderName"])
+    .AddSmtpSender(builder.Configuration["Email:Host"], builder.Configuration.GetValue<int>("Email:Port"));
 
 var app = builder.Build();
 

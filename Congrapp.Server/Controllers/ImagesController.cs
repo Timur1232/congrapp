@@ -9,7 +9,7 @@ namespace Congrapp.Server.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class ImagesController(BirthdayDbContext birthdayDbContext, IConfiguration config, IImageService imageService)
+public class ImagesController(BirthdayDbContext birthdayDbContext, IConfiguration config, ImageManager imageService)
     : ControllerBase
 {
     private readonly IConfiguration _config = config;

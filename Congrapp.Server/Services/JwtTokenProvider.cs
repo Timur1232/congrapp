@@ -1,9 +1,10 @@
-using Microsoft.IdentityModel.JsonWebTokens;
 using System.Security.Claims;
 using System.Text;
+using Congrapp.Server.Models;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Congrapp.Server.Users;
+namespace Congrapp.Server.Services;
 
 public interface IJwtTokenProvider
 {
@@ -24,7 +25,7 @@ public class JwtTokenProvider(IConfiguration configuration) : IJwtTokenProvider
             Subject = new ClaimsIdentity([
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("emailVarified", user.EmailVarified.ToString()),
+                new Claim("emailVerified", user.EmailVerified.ToString()),
                 new Claim("userId", user.Id.ToString())
             ]),
             Expires = DateTime.UtcNow.AddMinutes(configuration.GetValue<int>("Jwt:ExpirationMinutes")),
