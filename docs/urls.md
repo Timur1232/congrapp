@@ -7,3 +7,4 @@
 - password hasher: https://www.youtube.com/watch?v=J4ix8Mhi3rs
 - docker compose: https://www.youtube.com/watch?v=WQFx2m5Ub9M&t=557s
 - email verification: https://www.youtube.com/watch?v=KtCjH-1iCIk
+- background service: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-9.0&tabs=visual-studio 
