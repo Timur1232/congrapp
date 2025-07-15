@@ -6,11 +6,11 @@ services:
       target: "base"
     entrypoint: 
       - "dotnet"
-      - "./bin/Debug/net9.0/Congrapp.Server.dll"  # Относительный путь (от working_dir)
+      - "./bin/Debug/net9.0/Congrapp.Server.dll"
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
-      ASPNETCORE_STATICWEBASSETS: "./bin/Debug/net9.0/Congrapp.Server.staticwebassets.runtime.CT.json"  # Относительный
+      ASPNETCORE_STATICWEBASSETS: "./bin/Debug/net9.0/Congrapp.Server.staticwebassets.runtime.CT.json"
     volumes:
       - "./Congrapp.Server:/app:rw"
       - ".:/src:rw"
