@@ -4,6 +4,19 @@
     build:
       context: .
       dockerfile: Congrapp.Server/Dockerfile
+      target: "base"
+    entrypoint:
+      - "dotnet"
+      - "./bin/Debug/net9.0/Congrapp.Server.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      ASPNETCORE_STATICWEBASSETS: "./bin/Debug/net9.0/Congrapp.Server.staticwebassets.runtime.CT.json"
+    volumes:
+      - "./Congrapp.Server:/app:rw"
+      - ".:/src:rw"
+      - "nuget-packages:/home/app/.nuget/packages"
+    working_dir: "/app"
     ports:
       - "8080:8080"
     depends_on:
@@ -13,6 +26,11 @@
     build:
       context: ./congrapp-client
       dockerfile: Dockerfile
+    environment:
+      - REACT_APP_API_BASE_URL=http://congrapp.server:8080
+    volumes:
+      - "./congrapp-client:/app:rw"
+      - "/app/node_modules"
     ports:
       - "3000:80"
     depends_on:
@@ -31,3 +49,4 @@
 
 volumes:
   papercut_data:
+  nuget-packages:
