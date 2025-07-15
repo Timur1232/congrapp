@@ -32,31 +32,46 @@ const DashboardPage: React.FC = () => {
         logout();
         navigate('/');
     };
+    
+    const upcomingBirthday = (dateStr: string): Date => {
+        const today = new Date();
+        const [year, month, day] = dateStr
+            .split('-')
+            .map(Number);
+        const date = new Date(today.getFullYear(), month - 1, day);
 
+        if (date < today) {
+            date.setFullYear(today.getFullYear() + 1);
+        }
+
+        return date;
+    };
+    
+    const isToday = (date: Date): boolean => {
+        const today = new Date();
+        return date.getDate() === today.getDate()
+            && date.getMonth() == today.getMonth();
+    } 
+    
     const sortBirthdays = (items: BirthdayInfo[]): BirthdayInfo[] => {
-        items.sort((a, b) => {
-            const upcomingBirthday = (dateStr: string): Date => {
-                const today = new Date();
-                const [year, month, day] = dateStr
-                    .split('-')
-                    .map(Number);
-                const date = new Date(today.getFullYear(), month - 1, day);
-                
-                if (date < today) {
-                    date.setFullYear(today.getFullYear() + 1);
-                }
-                
-                return date;
-            };
-            
+        return [...items].sort((a, b) => {
             const upcomingA = upcomingBirthday(a.birthdayDate);
             const upcomingB = upcomingBirthday(b.birthdayDate);
-            
             return upcomingB.getTime() - upcomingA.getTime();
         });
-
-        return items;
     };
+    
+    const sortedBirthdays = sortBirthdays(birthdays);
+
+    const todayBirthdays = sortedBirthdays.filter(item => {
+        const date = upcomingBirthday(item.birthdayDate);
+        return isToday(date);
+    });
+
+    const upcomingBirthdays = sortedBirthdays.filter(item => {
+        const date = upcomingBirthday(item.birthdayDate);
+        return !isToday(date);
+    });
 
     const handleAddBirthday = () => {
         navigate('/add-birthday');
@@ -87,36 +102,71 @@ const DashboardPage: React.FC = () => {
                     </button>
                 </div>
 
-                <div className="birthdays-list">
-                    {sortBirthdays(birthdays).map((item) => (
-                        <div
-                            key={item.id}
-                            className="birthday-card"
-                            onClick={() => handleViewDetails(item.id)}
-                        >
-                            <div className="image-container">
-                                {item.hasImage ? (
-                                    <ImageLoader
-                                        birthdayId={item.id}
-                                        alt={item.personName}
-                                        className="birthday-image"
-                                    />
-                                ) : (
-                                    <div className="no-image">👤</div>
-                                )}
-                            </div>
+                {todayBirthdays.length > 0 && (
+                    <div className="birthday-section">
+                        <h3>Сегодня празднуют</h3>
+                        <div className="birthdays-list">
+                            {todayBirthdays.map((item) => (
+                                <div
+                                    key={item.id}
+                                    className="birthday-card today-card"
+                                    onClick={() => handleViewDetails(item.id)}
+                                >
+                                    <div className="image-container">
+                                        {item.hasImage ? (
+                                            <ImageLoader
+                                                birthdayId={item.id}
+                                                alt={item.personName}
+                                                className="birthday-image"
+                                            />
+                                        ) : (
+                                            <div className="no-image">🎂</div>
+                                        )}
+                                    </div>
 
-                            <div className="info-container">
-                                <h3>{item.personName}</h3>
-                                <p>
-                                    {new Date(item.birthdayDate).toLocaleDateString('ru-RU', {
-                                        day: '2-digit',
-                                        month: '2-digit'
-                                    })}
-                                </p>
-                            </div>
+                                    <div className="info-container">
+                                        <h3>{item.personName}</h3>
+                                        <p>Сегодня!</p>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                    ))}
+                    </div>
+                )}
+
+                <div className="birthday-section">
+                    <h3>Ближайшие дни рождения</h3>
+                    <div className="birthdays-list">
+                        {upcomingBirthdays.map((item) => (
+                            <div
+                                key={item.id}
+                                className="birthday-card"
+                                onClick={() => handleViewDetails(item.id)}
+                            >
+                                <div className="image-container">
+                                    {item.hasImage ? (
+                                        <ImageLoader
+                                            birthdayId={item.id}
+                                            alt={item.personName}
+                                            className="birthday-image"
+                                        />
+                                    ) : (
+                                        <div className="no-image">👤</div>
+                                    )}
+                                </div>
+
+                                <div className="info-container">
+                                    <h3>{item.personName}</h3>
+                                    <p>
+                                        {new Date(upcomingBirthday(item.birthdayDate)).toLocaleDateString('ru-RU', {
+                                            day: '2-digit',
+                                            month: 'long'
+                                        })}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </main>
         </div>

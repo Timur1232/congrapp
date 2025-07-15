@@ -122,3 +122,35 @@
     color: #4299e1;
     font-size: 1.2rem;
 }
+
+.birthday-section {
+    margin-top: 2rem;
+}
+
+.birthday-section h3 {
+    margin-bottom: 1rem;
+    color: #2d3748;
+    font-size: 1.4rem;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+}
+
+.today-card {
+    border: 2px solid #f6ad55;
+    background-color: #fffaf0;
+    position: relative;
+}
+
+.today-card::before {
+    content: "🎉";
+    position: absolute;
+    font-size: 1.5rem;
+    background: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
