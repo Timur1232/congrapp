@@ -26,7 +26,7 @@ public class AuthController(
         var user = await birthdayDbContext.Users.SingleOrDefaultAsync(x => x.Email == request.Email);
         if (user == null)
         {
-            return Unauthorized("User not found.");
+            return NotFound("User not found.");
         }
 
         if (!passwordHasher.Varify(request.Password, user.PasswordHash))
@@ -66,7 +66,8 @@ public class AuthController(
         birthdayDbContext.EmailVerifications.Add(emailVerification);
         await birthdayDbContext.SaveChangesAsync();
 
-        return Ok(user);
+        var userDto = new User.UserDto(user.Email, user.EmailVerified);
+        return Ok(userDto);
     }
 
     [HttpGet("verify")]
@@ -92,6 +93,7 @@ public class AuthController(
         birthdayDbContext.Users.Update(user);
         await birthdayDbContext.SaveChangesAsync();
         
-        return Ok(user);
+        var userDto = new User.UserDto(user.Email, user.EmailVerified);
+        return Ok(userDto);
     }
 }

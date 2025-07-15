@@ -9,7 +9,7 @@ namespace Congrapp.Server.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class NotificationController(BirthdayDbContext birthdayDbContext) : ControllerBase
+public class NotificationsController(BirthdayDbContext birthdayDbContext) : ControllerBase
 {
     
     [HttpGet]

@@ -1,0 +1,22 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  congrapp.server:
+    build:
+      context: "/home/timur/dev/RiderProjects/congrapp"
+      dockerfile: "Congrapp.Server/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net9.0/Congrapp.Server.dll"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_STATICWEBASSETS: "/app/bin/Debug/net9.0/Congrapp.Server.staticwebassets.runtime.CT.json"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "congrapp.server:dev"
+    ports: []
+    volumes:
+    - "/home/timur/dev/RiderProjects/congrapp/Congrapp.Server:/app:rw"
+    - "/home/timur/dev/RiderProjects/congrapp:/src:rw"
+    - "/home/timur/.nuget/packages:/home/app/.nuget/packages"
+    working_dir: "/app"

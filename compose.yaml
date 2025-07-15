@@ -16,3 +16,10 @@
     ports:
       - "8082:80"
       - "25:25"
+    volumes:
+      - papercut_data:/var/papercut
+    environment:
+      - PAPERCUT_SMTP_MESSAGESTORE=/var/papercut
+
+volumes:
+  papercut_data:
