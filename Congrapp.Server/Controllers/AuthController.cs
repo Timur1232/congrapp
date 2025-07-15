@@ -26,16 +26,16 @@ public class AuthController(
         var user = await birthdayDbContext.Users.SingleOrDefaultAsync(x => x.Email == request.Email);
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new {Error = "User not found."});
         }
 
         if (!passwordHasher.Varify(request.Password, user.PasswordHash))
         {
-            return Unauthorized("Invalid password.");
+            return Unauthorized(new {Error = "Invalid password."});
         }
 
-        string token = jwtTokenProvider.GenerateJwtToken(user);
-        return Ok(token);
+        var token = jwtTokenProvider.GenerateJwtToken(user);
+        return Ok(new {Token = token});
     }
 
     [HttpPost("register")]
@@ -43,13 +43,13 @@ public class AuthController(
     {
         if (request.Password != request.PasswordConfirmation)
         {
-            return Unauthorized("Passwords do not match.");
+            return Unauthorized(new {Error = "Passwords do not match."});
         }
         
         var existingUser = await birthdayDbContext.Users.SingleOrDefaultAsync(x => x.Email == request.Email);
         if (existingUser != null)
         {
-            return Unauthorized("User already exists.");
+            return Unauthorized(new {Error = "User already exists."});
         }
         
         var passwordHash = passwordHasher.Hash(request.Password);
@@ -66,8 +66,8 @@ public class AuthController(
         birthdayDbContext.EmailVerifications.Add(emailVerification);
         await birthdayDbContext.SaveChangesAsync();
 
-        var userDto = new User.UserDto(user.Email, user.EmailVerified);
-        return Ok(userDto);
+        var token = jwtTokenProvider.GenerateJwtToken(user);
+        return Ok(new {Token = token});
     }
 
     [HttpGet("verify")]
@@ -79,19 +79,33 @@ public class AuthController(
             .SingleOrDefaultAsync(x => x.Id == inputToken);
         if (emailVerification == null)
         {
-            return BadRequest("Invalid token.");
+            return BadRequest(new {Error = "Invalid token."});
         }
         
         var user = await birthdayDbContext.Users.FirstOrDefaultAsync(x => x.Id == emailVerification.UserId);
         birthdayDbContext.EmailVerifications.Remove(emailVerification);
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new {Error = "User not found."});
         }
         
         user.EmailVerified = true;
         birthdayDbContext.Users.Update(user);
         await birthdayDbContext.SaveChangesAsync();
+        
+        var userDto = new User.UserDto(user.Email, user.EmailVerified);
+        return Ok(userDto);
+    }
+
+    [Authorize]
+    [HttpGet("me")]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        var user = await birthdayDbContext.GetUserByClaims(User);
+        if (user == null)
+        {
+            return NotFound(new {Error = "User not found."});
+        }
         
         var userDto = new User.UserDto(user.Email, user.EmailVerified);
         return Ok(userDto);

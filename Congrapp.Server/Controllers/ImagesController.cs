@@ -9,25 +9,23 @@ namespace Congrapp.Server.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class ImagesController(BirthdayDbContext birthdayDbContext, IConfiguration config, ImageManager imageService)
+public class ImagesController(BirthdayDbContext birthdayDbContext, ImageManager imageService)
     : ControllerBase
 {
-    private readonly IConfiguration _config = config;
-
     [HttpPost]
     public async Task<IActionResult> Upload([FromQuery] int birthdayId, [FromForm] IFormFile file)
     {
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new {Error = "User not found."});
         }
 
         var item = await birthdayDbContext.BirthdayInfos
             .FirstOrDefaultAsync(x => x.Id == birthdayId && x.UserId == user.Id);
         if (item == null)
         {
-            return NotFound("Item not found.");
+            return NotFound(new {Error = "Item not found."});
         }
 
         if (item.ImagePath != null)
@@ -41,7 +39,7 @@ public class ImagesController(BirthdayDbContext birthdayDbContext, IConfiguratio
         var res = imageService.Save(file);
         if (!res.IsValid)
         {
-            return BadRequest(res.Error);
+            return BadRequest(new {res.Error});
         }
         
         var filePath = res.Value;
@@ -58,14 +56,14 @@ public class ImagesController(BirthdayDbContext birthdayDbContext, IConfiguratio
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new {Error = "User not found."});
         }
 
         var item = await birthdayDbContext.BirthdayInfos
             .FirstOrDefaultAsync(x => x.Id == birthdayId && x.UserId == user.Id);
         if (item == null)
         {
-            return NotFound("Item not found.");
+            return NotFound(new {Error = "Item not found."});
         }
         if (item.ImagePath == null)
         {
@@ -90,14 +88,14 @@ public class ImagesController(BirthdayDbContext birthdayDbContext, IConfiguratio
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new {Error = "User not found."});
         }
 
         var item = await birthdayDbContext.BirthdayInfos
             .FirstOrDefaultAsync(x => x.Id == birthdayId && x.UserId == user.Id);
         if (item == null)
         {
-            return NotFound("Item not found.");
+            return NotFound(new {Error = "Item not found."});
         }
         if (item.ImagePath == null)
         {

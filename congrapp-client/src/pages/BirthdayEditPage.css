@@ -1,0 +1,142 @@
+.birthday-edit-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-section, .notifications-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #4a5568;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.form-actions button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.confirm-button{
+    background-color: #4299e1;
+    color: white;
+    border: none;
+}
+
+.confirm-button:hover {
+    background-color: #3182ce;
+}
+
+.confirm-button:disabled {
+    background-color: #cbd5e0;
+    cursor: not-allowed;
+}
+
+.delete-button {
+    background-color: #e53e3e !important;
+    color: white !important;
+}
+
+.delete-button:hover {
+    background-color: #c53030 !important;
+}
+
+.notification-add-form, .notification-edit-form {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+}
+
+.notification-add-form select, .notification-edit-form select {
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.notification-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.notification-actions button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.notification-actions button:first-child {
+    background-color: #48bb78;
+    color: white;
+    border: none;
+}
+
+.notification-actions button.delete {
+    background-color: #e53e3e;
+    color: white;
+    border: none;
+}
+
+.notifications-list {
+    margin-top: 1rem;
+}
+
+.notification-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    background-color: #f7fafc;
+}
+
+.email-warning {
+    padding: 1rem;
+    background-color: #fffaf0;
+    border: 1px solid #f6ad55;
+    border-radius: 6px;
+    color: #c05621;
+    text-align: center;
+}
+
+.error-message {
+    color: #e53e3e;
+    background-color: #fff5f5;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+}

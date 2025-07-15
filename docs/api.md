@@ -14,7 +14,14 @@
 - GET api/verify?token=<token> - подтверждение почты
     Return: json
     - Email
-    - EmailConfirmed: bool
+    - EmailVerified: bool
+
+- GET api/auth/me
+    Headers:
+    - Authorization: Bearer <token>
+    Return: json
+    - Email
+    - EmailVerified: bool
 
 # Items:
 - GET api/items - запрос всех записей пользователя
@@ -25,7 +32,7 @@
     - BirthdayDate: YYYY-MM-DD
     - PersonName
     - Note
-    - ImagePath
+    - HasImage: bool
 
 - GET api/items?birthdayId=<id> - запрос записи по id
     Header:
@@ -35,7 +42,7 @@
     - BirthdayDate: YYYY-MM-DD
     - PersonName
     - Note
-    - ImagePath
+    - HasImage: bool
 
 - POST api/items - создание записи
     Header:
@@ -48,7 +55,7 @@
     - BirthdayDate: YYYY-MM-DD
     - PersonName
     - Note
-    - ImagePath
+    - HasImage: bool
 
 - PUT api/items?birthdayId=<id> - обновление записи
     Header:
@@ -61,7 +68,7 @@
     - BirthdayDate: YYYY-MM-DD
     - PersonName
     - Note
-    - ImagePath
+    - HasImage: bool
 
 - DELETE api/items?birthdayId=<id> - удаление записи (и всех записей уведомлений)
     Header:
@@ -71,7 +78,7 @@
     - BirthdayDate: YYYY-MM-DD
     - PersonName
     - Note
-    - ImagePath
+    - HasImage: bool
 
 # Images:
 - GET api/images?birthdayId=<id> - запрос изображения записи

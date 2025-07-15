@@ -1,0 +1,63 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 20px;
+  background-color: #f5f8fa;
+}
+
+.app-title {
+  font-size: 2.5rem;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+}
+
+.app-subtitle {
+  font-size: 1.2rem;
+  color: #718096;
+  margin-bottom: 2rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 15px;
+}
+
+.primary-button, .secondary-button {
+  padding: 12px 24px;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.primary-button {
+  background-color: #4299e1;
+  color: white;
+}
+
+.primary-button:hover {
+  background-color: #3182ce;
+}
+
+.secondary-button {
+  background-color: #e2e8f0;
+  color: #2d3748;
+}
+
+.secondary-button:hover {
+  background-color: #cbd5e0;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.5rem;
+  color: #4299e1;
+}

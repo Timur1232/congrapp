@@ -12,25 +12,25 @@ namespace Congrapp.Server.Controllers;
 public class NotificationsController(BirthdayDbContext birthdayDbContext) : ControllerBase
 {
     
-    [HttpGet]
+    [HttpGet("all")]
     public async Task<IActionResult> GetAll([FromQuery] int birthdayId)
     {
         if (birthdayId <= 0)
         {
-            return BadRequest("Invalid birthdayId.");
+            return BadRequest(new {Error = "Invalid birthdayId."});
         }
         
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new {Error = "User not found."});
         }
         
         var birthday = await birthdayDbContext.BirthdayInfos
             .FirstOrDefaultAsync(x => x.Id == birthdayId && x.UserId == user.Id);
         if (birthday == null)
         {
-            return NotFound("Birthday not found.");
+            return NotFound(new {Error = "Birthday not found."});
         }
 
         var records = await birthdayDbContext.NotificationRecords
@@ -44,20 +44,20 @@ public class NotificationsController(BirthdayDbContext birthdayDbContext) : Cont
     {
         if (birthdayId <= 0 || notificationId <= 0)
         {
-            return BadRequest("Invalid birthdayId or notificationId.");
+            return BadRequest(new {Error = "Invalid birthdayId or notificationId."});
         }
         
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new {Error = "User not found."});
         }
         
         var birthday = await birthdayDbContext.BirthdayInfos
             .FirstOrDefaultAsync(x => x.Id == birthdayId && x.UserId == user.Id);
         if (birthday == null)
         {
-            return NotFound("Birthday not found.");
+            return NotFound(new {Error = "Birthday not found."});
         }
 
         var record = await birthdayDbContext.NotificationRecords
@@ -71,14 +71,14 @@ public class NotificationsController(BirthdayDbContext birthdayDbContext) : Cont
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new {Error = "User not found."});
         }
         
         var birthday = await birthdayDbContext.BirthdayInfos
             .FirstOrDefaultAsync(x => x.Id == birthdayId && x.UserId == user.Id);
         if (birthday == null)
         {
-            return NotFound("Birthday not found.");
+            return NotFound(new {Error = "Birthday not found."});
         }
 
         var notificationRecord = new NotificationRecord
@@ -99,21 +99,21 @@ public class NotificationsController(BirthdayDbContext birthdayDbContext) : Cont
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new {Error = "User not found."});
         }
         
         var birthday = await birthdayDbContext.BirthdayInfos
             .FirstOrDefaultAsync(x => x.Id == birthdayId && x.UserId == user.Id);
         if (birthday == null)
         {
-            return NotFound("Birthday not found.");
+            return NotFound(new {Error = "Birthday not found."});
         }   
         
         var notificationRecord = await birthdayDbContext.NotificationRecords
             .FirstOrDefaultAsync(x => x.Id == notificationId && x.BirthdayId == birthdayId);
         if (notificationRecord == null)
         {
-            return NotFound("Notification not found.");
+            return NotFound(new {Error = "Notification not found."});
         }
         
         notificationRecord.Update(recordDto);
@@ -129,21 +129,21 @@ public class NotificationsController(BirthdayDbContext birthdayDbContext) : Cont
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new {Error = "User not found."});
         }
         
         var birthday = await birthdayDbContext.BirthdayInfos
             .FirstOrDefaultAsync(x => x.Id == birthdayId && x.UserId == user.Id);
         if (birthday == null)
         {
-            return NotFound("Birthday not found.");
+            return NotFound(new {Error = "Birthday not found."});
         }   
         
         var notificationRecord = await birthdayDbContext.NotificationRecords
             .FirstOrDefaultAsync(x => x.Id == notificationId && x.BirthdayId == birthdayId);
         if (notificationRecord == null)
         {
-            return NotFound("Notification not found.");
+            return NotFound(new {Error = "Notification not found."});
         }
         
         birthdayDbContext.NotificationRecords.Remove(notificationRecord);

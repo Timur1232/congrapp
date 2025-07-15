@@ -5,7 +5,8 @@ namespace Congrapp.Server.Models;
 
 public class BirthdayInfo
 {
-    public record BirthdayInfoDto(string PersonName, DateOnly BirthdayDate, string? Note);
+    public record BirthdayInfoRequestDto(string PersonName, DateOnly BirthdayDate, string? Note);
+    public record BirthdayInfoRespondDto(int Id, string PersonName, DateOnly BirthdayDate, string? Note, bool HasImage);
 
     [Key] public int Id { get; set; }
     [ForeignKey("User"), Required] public int UserId { get; set; }
@@ -14,10 +15,22 @@ public class BirthdayInfo
     [MaxLength(100)] public string? Note { get; set; }
     [MaxLength(100)] public string? ImagePath { get; set; }
 
-    public void Update(BirthdayInfoDto itemDto)
+    public void Update(BirthdayInfoRequestDto itemRequestDto)
     {
-        PersonName = itemDto.PersonName;
-        BirthdayDate = itemDto.BirthdayDate;
-        Note = itemDto.Note;
+        PersonName = itemRequestDto.PersonName;
+        BirthdayDate = itemRequestDto.BirthdayDate;
+        Note = itemRequestDto.Note;
+    }
+
+    public BirthdayInfoRespondDto Respond()
+    {
+        return new BirthdayInfoRespondDto
+        (
+            Id,
+            PersonName,
+            BirthdayDate,
+            Note,
+            ImagePath != null
+        );
     }
 }

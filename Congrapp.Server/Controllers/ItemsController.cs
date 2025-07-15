@@ -17,11 +17,12 @@ public class ItemsController(BirthdayDbContext birthdayDbContext) : ControllerBa
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new {Error = "User not found."});
         }
         
         var items = await birthdayDbContext.BirthdayInfos
             .Where(x => x.UserId == user.Id)
+            .Select(x => x.Respond())
             .ToListAsync();
         return Ok(items); 
     }
@@ -31,67 +32,67 @@ public class ItemsController(BirthdayDbContext birthdayDbContext) : ControllerBa
     {
         if (birthdayId <= 0)
         {
-            return BadRequest("Id must be higher than zero.");
+            return BadRequest(new {Error = "Id must be higher than zero."});
         }
         
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new {Error = "User not found."});
         }
         
         var item = await birthdayDbContext.BirthdayInfos
             .FirstOrDefaultAsync(x => x.Id == birthdayId && x.UserId == user.Id);
         if (item == null)
         {
-            return NotFound("Item not found.");
+            return NotFound(new {Error = "Birthday not found."});
         }
-        return Ok(item);
+        return Ok(item.Respond());
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] BirthdayInfo.BirthdayInfoDto itemDto)
+    public async Task<IActionResult> Create([FromBody] BirthdayInfo.BirthdayInfoRequestDto itemRequestDto)
     {
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new {Error = "User not found."});
         }
 
         var item = new BirthdayInfo
         {
             Id = 0,
             UserId = user.Id,
-            BirthdayDate = itemDto.BirthdayDate,
-            PersonName = itemDto.PersonName,
-            Note = itemDto.Note
+            BirthdayDate = itemRequestDto.BirthdayDate,
+            PersonName = itemRequestDto.PersonName,
+            Note = itemRequestDto.Note
         };
         
         birthdayDbContext.BirthdayInfos.Add(item);
         await birthdayDbContext.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetById), new { birthdayId = item.Id }, item);
+        return CreatedAtAction(nameof(GetById), new { birthdayId = item.Id }, item.Respond());
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update([FromQuery] int birthdayId, [FromBody] BirthdayInfo.BirthdayInfoDto itemDto)
+    public async Task<IActionResult> Update([FromQuery] int birthdayId, [FromBody] BirthdayInfo.BirthdayInfoRequestDto itemRequestDto)
     {
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new {Error = "User not found."});
         }
 
         var item = await birthdayDbContext.BirthdayInfos.FirstOrDefaultAsync(x => x.Id == birthdayId);
         if (item == null)
         {
-            return NotFound("Item not found.");
+            return NotFound(new {Error = "Birthday not found."});
         }
 
-        item.Update(itemDto);
+        item.Update(itemRequestDto);
         
         birthdayDbContext.BirthdayInfos.Update(item);
         await birthdayDbContext.SaveChangesAsync();
-        return Ok(item);
+        return Ok(item.Respond());
     }
 
     [HttpDelete]
@@ -100,13 +101,13 @@ public class ItemsController(BirthdayDbContext birthdayDbContext) : ControllerBa
         var user = await birthdayDbContext.GetUserByClaims(User);
         if (user == null)
         {
-            return NotFound("User not found.");
+            return NotFound(new {Error = "User not found."});
         }
         
         var item = await birthdayDbContext.BirthdayInfos.FirstOrDefaultAsync(x => x.Id == birthdayId);
         if (item == null)
         {
-            return NotFound("Item not found.");
+            return NotFound(new {Error = "Birthday not found."});
         }
         
         birthdayDbContext.BirthdayInfos.Remove(item);
@@ -114,6 +115,6 @@ public class ItemsController(BirthdayDbContext birthdayDbContext) : ControllerBa
         await birthdayDbContext.NotificationRecords
             .Where(x => x.BirthdayId == birthdayId)
             .ExecuteDeleteAsync();
-        return Ok(item);
+        return Ok(item.Respond());
     }
 }
