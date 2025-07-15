@@ -18,7 +18,7 @@ export interface NotificationRecord {
 }
 
 class AuthApi {
-    readonly baseUrl = 'http://localhost:8080';
+    readonly baseUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
     
     async login(email: string, password: string) {
         const res = await fetch(`${(this.baseUrl)}/api/auth/login`, {

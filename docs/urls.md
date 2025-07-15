@@ -8,3 +8,6 @@
 - docker compose: https://www.youtube.com/watch?v=WQFx2m5Ub9M&t=557s
 - email verification: https://www.youtube.com/watch?v=KtCjH-1iCIk
 - background service: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/host/hosted-services?view=aspnetcore-9.0&tabs=visual-studio 
+- ts + react: https://youtu.be/FJDVKeh7RJI?si=4Gn-krYvKLauD4ai
+- react app + .net backend: https://youtu.be/dFIfZBEyZ90?si=_FdgU1LmNI5DgTAV
+- docker & docker-compose + react: https://www.docker.com/blog/how-to-dockerize-react-app/
