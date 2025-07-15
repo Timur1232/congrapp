@@ -71,7 +71,7 @@ dotnet ef database update
 Запустите приложение с помощью Docker Compose:
 ```bash
 cd ..
-docker-compose up -d --build
+docker compose up -d --build
 ```
 Приложение будет доступно по адресу: http://localhost:3000
 
