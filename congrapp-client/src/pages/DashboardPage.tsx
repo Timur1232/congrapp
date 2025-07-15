@@ -57,7 +57,7 @@ const DashboardPage: React.FC = () => {
         return [...items].sort((a, b) => {
             const upcomingA = upcomingBirthday(a.birthdayDate);
             const upcomingB = upcomingBirthday(b.birthdayDate);
-            return upcomingB.getTime() - upcomingA.getTime();
+            return upcomingA.getTime() - upcomingB.getTime();
         });
     };
     
